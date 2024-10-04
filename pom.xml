@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>SC403_tienda</groupId>
-	<artifactId>demo</artifactId>
+	<artifactId>tienda</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
+	<name>tienda</name>
 	<description>Proyecto web y patrones</description>
 	<url/>
 	<licenses>
