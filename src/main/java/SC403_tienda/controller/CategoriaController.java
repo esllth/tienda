@@ -60,7 +60,7 @@ public class CategoriaController {
         return "redirect:/categoria/listado";
     }
 
-    @GetMapping("/modificar/{idCategoria}") ///parametro Arbol por Long
+    @GetMapping("/modificar/{idCategoria}") ///parametro Categoria por Long
     public String categoriaModificar(@PathVariable Categoria idCategoria, Model model) {
         Categoria categoria = categoriaService.getCategoria(idCategoria);
         if (categoria == null) {
