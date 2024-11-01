@@ -67,6 +67,6 @@ public class CategoriaController {
             return "redirect:/categoria/listado";
         }
         model.addAttribute("categoria", categoria);
-        return "categoria/modificar";
+        return "categoria/modificar"; ///modifica se hizo refactor en template a modificar
     }
 }
