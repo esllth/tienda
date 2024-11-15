@@ -2,6 +2,7 @@ package SC403_tienda.domain;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import lombok.Data;
 
 @Data ///clase de datos, primero se declara para cada una
@@ -19,6 +20,11 @@ public class Categoria implements Serializable {
     private String descripcion;
     private String rutaImagen;
     private boolean activo;
+    
+    //hacer relaciones con otras tablas
+    @OneToMany
+    @JoinColumn(name="id_categoria", updatable = false)
+    List<Producto> productos;
 
     public Categoria() {
     }

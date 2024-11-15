@@ -2,11 +2,11 @@ package SC403_tienda.service.implement;
 
 import SC403_tienda.dao.CategoriaDao;
 import SC403_tienda.domain.Categoria;
-import SC403_tienda.service.CategoriaService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import SC403_tienda.service.CategoriaService;
 
 @Service
 public class CategoriaServiceImpl implements CategoriaService {
