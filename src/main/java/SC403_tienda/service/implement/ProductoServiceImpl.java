@@ -2,17 +2,17 @@ package SC403_tienda.service.implement;
 
 import SC403_tienda.dao.ProductoDao;
 import SC403_tienda.domain.Producto;
+import SC403_tienda.service.ProductoService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import SC403_tienda.service.ProductoService;
 
 @Service
 public class ProductoServiceImpl implements ProductoService {
 
     @Autowired
-    private ProductoDao productoDao; ///instancia para traer metodos
+    private ProductoDao productoDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -40,5 +40,24 @@ public class ProductoServiceImpl implements ProductoService {
     @Transactional
     public void delete(Producto producto) {
         productoDao.delete(producto);
+    }
+
+    // Lista de productos con precio entre ordendados por descripción ConsultaAmpliada
+    @Override
+    @Transactional(readOnly = true)
+    public List<Producto> findByPrecioBetweenOrderByDescripcion(double precioInf, double precioSup) {
+        return productoDao.findByPrecioBetweenOrderByDescripcion(precioInf, precioSup);
+    }
+    
+    @Override
+    @Transactional(readOnly=true)    
+    public List<Producto> metodoJPQL(double precioInf, double precioSup) {
+        return productoDao.metodoJPQL(precioInf, precioSup);
+    }
+    
+    @Override
+    @Transactional(readOnly=true)    
+    public List<Producto> metodoNativo(double precioInf, double precioSup) {
+        return productoDao.metodoNativo(precioInf, precioSup);
     }
 }

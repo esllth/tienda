@@ -18,4 +18,14 @@ public interface ProductoService {
     ///Se elimina e producto que tiene el id pasado por parametro
     public void delete(Producto producto);
 
+    //query 1 de consultadas ampliadas (sencillas)
+     public List<Producto> findByPrecioBetweenOrderByDescripcion(double precioInf, double precioSup); 
+     
+     //query 2
+     public List<Producto> metodoJPQL(double precioInf, double precioSup);
+     
+     //query 3
+     public List<Producto> metodoNativo(double precioInf, double precioSup);
+             
+             
 }
