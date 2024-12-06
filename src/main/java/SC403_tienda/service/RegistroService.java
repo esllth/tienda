@@ -5,6 +5,7 @@ import jakarta.mail.MessagingException;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
+
 public interface RegistroService {
 
     //model para modifcar en la vista

@@ -3,6 +3,7 @@ package SC403_tienda.service;
 import SC403_tienda.domain.Producto;
 import java.util.List;
 
+
 public interface ProductoService {
 
     ///Se obtiene un listado de productos en un List

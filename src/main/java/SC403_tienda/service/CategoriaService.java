@@ -2,7 +2,8 @@ package SC403_tienda.service;
 
 import SC403_tienda.domain.Categoria;
 import java.util.List;
-
+import org.springframework.stereotype.Service;
+@Service
 public interface CategoriaService {
 
     ///Se obtiene un listado de categorias en un List
