@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("userDetailsService")
+@Service("usuarioService")
 public class UsuarioServiceImpl implements UsuarioService {
 
-@Autowired
+    @Autowired
     private UsuarioDao usuarioDao;
     @Autowired
     private RolDao rolDao;
@@ -57,7 +57,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional
     public void save(Usuario usuario, boolean crearRolUser) {
-        usuario=usuarioDao.save(usuario);
+        usuario = usuarioDao.save(usuario);
         if (crearRolUser) {  //Si se está creando el usuario, se crea el rol por defecto "USER"
             Rol rol = new Rol();
             rol.setNombre("ROLE_USER");

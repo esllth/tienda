@@ -31,7 +31,7 @@ public class UsuarioDetailsServiceImpl implements UsuarioDetailsService {
 
         //Se valida si se recuperó un usuario / sino lanza un error
         if (usuario == null) {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException("Usuario no encontrado: " + username);
         }
 
         //Si estamos acá es porque si se recuperó un usuario...
@@ -42,6 +42,10 @@ public class UsuarioDetailsServiceImpl implements UsuarioDetailsService {
         var roles = new ArrayList<GrantedAuthority>();
         for (Rol rol : usuario.getRoles()) {
             roles.add(new SimpleGrantedAuthority(rol.getNombre()));
+        }
+        // Validar que el usuario tenga roles
+        if (roles.isEmpty()) {
+            throw new UsernameNotFoundException("Usuario no tiene roles asignados");
         }
         //Se retorna un User (de tipo UserDetails)
         return new User(usuario.getUsername(), usuario.getPassword(), roles);
