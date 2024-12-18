@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import SC403_tienda.service.ProductoService;
 import jakarta.mail.FetchProfile.Item;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
-//@Controller
+
+@Controller
 //@Slf4j
-//@RequestMapping("/categoria") // Ruta del controlador
+//@RequestMapping("/carrito") // Ruta del controlador
 public class CarritoController {
 
     @Autowired
