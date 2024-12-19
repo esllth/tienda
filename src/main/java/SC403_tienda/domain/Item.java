@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class Item extends Producto {
 
-    private int cantidad; //Almacenar la cantidad de items de un producto
+    private int cantidad; // Almacenar la cantidad de items de un producto
 
     public Item() {
     }

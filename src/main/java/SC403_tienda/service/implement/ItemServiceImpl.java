@@ -1,14 +1,14 @@
-package SC403_tienda.service.implement;
+package SC403_tienda.service.impl;
 
 import SC403_tienda.dao.FacturaDao;
 import SC403_tienda.dao.ProductoDao;
 import SC403_tienda.dao.UsuarioDao;
 import SC403_tienda.dao.VentaDao;
 import SC403_tienda.domain.Factura;
+import SC403_tienda.domain.Item;
 import SC403_tienda.domain.Usuario;
 import SC403_tienda.domain.Venta;
 import SC403_tienda.service.ItemService;
-import jakarta.mail.FetchProfile.Item;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,80 +18,51 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class ItemServiceImpl implements ItemService {
 
     @Autowired
-    private HttpSession session; ///
+    private HttpSession session;
 
-//Se usa para tener en una session de memoria la información del carrito de compras
     @Override
     public List<Item> gets() {
         @SuppressWarnings("unchecked")
-        List<Item> listaItems = (List) session.getAttribute("listaItems");
-        return listaItems;
+        List<Item> listaItems = (List<Item>) session.getAttribute("listaItems");
+        return listaItems == null ? new ArrayList<>() : listaItems;
     }
 
-    //Se recupera el registro que tiene el idItem pasado por parámetro
-    //si no existe en la tabla se retorna null
     @Override
     public Item get(Item item) {
-        @SuppressWarnings("unchecked")
-        List<Item> listaItems = (List) session.getAttribute("listaItems");
-        if (listaItems != null) {
-            for (Item i : listaItems) {
-                if (Objects.equals(i.getIdProducto(), item.getIdProducto())) {
-                    return i;
-                }
+        List<Item> listaItems = gets();
+        for (Item i : listaItems) {
+            if (Objects.equals(i.getIdProducto(), item.getIdProducto())) {
+                return i;
             }
         }
         return null;
     }
 
-//Se elimina el registro que tiene el idItem pasado por parámetro
     @Override
     public void delete(Item item) {
-        @SuppressWarnings("unchecked")
-        List<Item> listaItems = (List) session.getAttribute("listaItems");
-        if (listaItems != null) {
-            var posicion = -1;
-            var existe = false;
-            for (var i : listaItems) {
-                posicion++;
-                if (Objects.equals(i.getIdProducto(), item.getIdProducto())) {
-                    existe = true;
-                    break;
-                }
-            }
-            if (existe) {
-                listaItems.remove(posicion);
-                session.setAttribute("listaItems", listaItems);
-            }
-        }
+        List<Item> listaItems = gets();
+        listaItems.removeIf(i -> Objects.equals(i.getIdProducto(), item.getIdProducto()));
+        session.setAttribute("listaItems", listaItems);
     }
 
-    //Si el objeto item tiene un idItem que existe en la tabla item
-    //El registro de actualiza con la nueva información
-    //Si el idItem NO existe en la tabla, se crea el registro con esa información
     @Override
     public void save(Item item) {
-        @SuppressWarnings("unchecked")
-        List<Item> listaItems = (List) session.getAttribute("listaItems");
-        if (listaItems == null) {
-            listaItems = new ArrayList<>();
-        }
-        var existe = false;
-        for (var i : listaItems) {
+        List<Item> listaItems = gets();
+        boolean exists = false;
+        for (Item i : listaItems) {
             if (Objects.equals(i.getIdProducto(), item.getIdProducto())) {
-                existe = true;
+                exists = true;
                 if (i.getCantidad() < i.getExistencias()) {
                     i.setCantidad(i.getCantidad() + 1);
                 }
                 break;
             }
         }
-        if (!existe) {
+        if (!exists) {
             item.setCantidad(1);
             listaItems.add(item);
         }
@@ -100,17 +71,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void update(Item item) {
-        @SuppressWarnings("unchecked")
-        List<Item> listaItems = (List) session.getAttribute("listaItems");
-        if (listaItems != null) {
-            for (var i : listaItems) {
-                if (Objects.equals(i.getIdProducto(), item.getIdProducto())) {
-                    i.setCantidad(item.getCantidad());
-                    session.setAttribute("listaItems", listaItems);
-                    break;
-                }
+        List<Item> listaItems = gets();
+        for (Item i : listaItems) {
+            if (Objects.equals(i.getIdProducto(), item.getIdProducto())) {
+                i.setCantidad(item.getCantidad());
+                break;
             }
         }
+        session.setAttribute("listaItems", listaItems);
     }
 
     @Autowired
@@ -124,21 +92,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void facturar() {
-        //Se debe recuperar el usuario autenticado y obtener su idUsuario
-        String username = "";
-        var principal = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
-
-        if (principal instanceof UserDetails userDetails) {
-            username = userDetails.getUsername();
-        } else {
-            if (principal != null) {
-                username = principal.toString();
-            }
-        }
-
+        String username = getAuthenticatedUsername();
         if (username.isBlank()) {
             System.out.println("username en blanco...");
             return;
@@ -150,22 +104,16 @@ public class ItemServiceImpl implements ItemService {
             return;
         }
 
-        //Se debe registrar la factura incluyendo el usuario
         Factura factura = new Factura(usuario.getIdUsuario());
         factura = facturaDao.save(factura);
 
-        //Se debe registrar las ventas de cada producto -actualizando existencias-
-        @SuppressWarnings("unchecked")
-        List<Item> listaItems = (List) session.getAttribute("listaItems");
+        List<Item> listaItems = gets();
         if (listaItems != null) {
             double total = 0;
             for (Item i : listaItems) {
                 var producto = productoDao.getReferenceById(i.getIdProducto());
                 if (producto.getExistencias() >= i.getCantidad()) {
-                    Venta venta = new Venta(factura.getIdFactura(),
-                            i.getIdProducto(),
-                            i.getPrecio(),
-                            i.getCantidad());
+                    Venta venta = new Venta(factura.getIdFactura(), i.getIdProducto(), i.getPrecio(), i.getCantidad());
                     ventaDao.save(venta);
                     producto.setExistencias(producto.getExistencias() - i.getCantidad());
                     productoDao.save(producto);
@@ -173,27 +121,27 @@ public class ItemServiceImpl implements ItemService {
                 }
             }
 
-            //Se debe registrar el total de la venta en la factura
             factura.setTotal(total);
             facturaDao.save(factura);
 
-            //Se debe limpiar el carrito la lista...
             listaItems.clear();
+            session.setAttribute("listaItems", listaItems);
         }
     }
 
     @Override
     public double getTotal() {
-        //Se debe registrar las ventas de cada producto -actualizando existencias-
-        @SuppressWarnings("unchecked")
-        var listaItems = (List<Item>) session.getAttribute("listaItems");
-        double total = 0;
-        if (listaItems != null) {
-            for (Item i : listaItems) {
-                total += i.getCantidad() * i.getPrecio();
-            }
-        }
-        return total;
+        List<Item> listaItems = gets();
+        return listaItems.stream().mapToDouble(i -> i.getCantidad() * i.getPrecio()).sum();
     }
 
+    private String getAuthenticatedUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails userDetails) {
+            return userDetails.getUsername();
+        } else if (principal != null) {
+            return principal.toString();
+        }
+        return "";
+    }
 }

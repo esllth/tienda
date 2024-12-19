@@ -1,22 +1,18 @@
 package SC403_tienda.controller;
 
+import SC403_tienda.domain.Item;
 import SC403_tienda.domain.Producto;
 import SC403_tienda.service.ItemService;
+import SC403_tienda.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import SC403_tienda.service.ProductoService;
-import jakarta.mail.FetchProfile.Item;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
-
 @Controller
-//@Slf4j
-//@RequestMapping("/carrito") // Ruta del controlador
 public class CarritoController {
-
     @Autowired
     private ItemService itemService;
     @Autowired
@@ -75,3 +71,4 @@ public class CarritoController {
         return "redirect:/";
     }
 }
+

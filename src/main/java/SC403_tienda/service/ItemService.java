@@ -1,25 +1,23 @@
 package SC403_tienda.service;
 
-import jakarta.mail.FetchProfile.Item;
+import SC403_tienda.domain.Item;
 import java.util.List;
-import org.springframework.stereotype.Service;
 
 public interface ItemService {
 
-  //Se usa para tener en una session de memoria la información del carrito de compras
-
+    // Se usa para tener en una sesión de memoria la información del carrito de compras
     public List<Item> gets();
 
-    //Se recupera el registro que tiene el idItem pasado por parámetro
-    //si no existe en la tabla se retorna null
+    // Se recupera el registro que tiene el idItem pasado por parámetro
+    // Si no existe en la tabla se retorna null
     public Item get(Item item);
 
-    //Se elimina el registro que tiene el idItem pasado por parámetro
+    // Se elimina el registro que tiene el idItem pasado por parámetro
     public void delete(Item item);
 
-    //Si el objeto item tiene un idItem que existe en la tabla item
-    //El registro de actualiza con la nueva información
-    //Si el idItem NO existe en la tabla, se crea el registro con esa información
+    // Si el objeto item tiene un idItem que existe en la tabla item
+    // El registro se actualiza con la nueva información
+    // Si el idItem NO existe en la tabla, se crea el registro con esa información
     public void save(Item item);
 
     public void update(Item item);

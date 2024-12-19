@@ -19,6 +19,11 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @GetMapping("/login")
+    public String login(Model model) {
+        return "login";
+    }
+
     @GetMapping("/listado")
     public String listado(Model model) {
         var usuarios = usuarioService.getUsuarios();
@@ -50,7 +55,6 @@ public class UsuarioController {
         return "redirect:/usuario/listado";
     }
 
-    
     @GetMapping("/eliminar/{idUsuario}")
     public String usuarioEliminar(Usuario usuario) {
         usuarioService.delete(usuario);

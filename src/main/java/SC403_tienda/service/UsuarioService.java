@@ -29,4 +29,6 @@ public interface UsuarioService {
     
     // Se elimina el usuario que tiene el id pasado por parámetro
     public void delete(Usuario usuario);
+
+    public Usuario findByUsername(String username);
 }
